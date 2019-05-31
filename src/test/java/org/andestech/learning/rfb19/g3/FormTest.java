@@ -25,6 +25,11 @@ public class FormTest
     private WebDriver wd = null;
     private ChromeOptions chromeOptions;
 
+    private String loginName = "", loginPass ="";
+
+    private Wait<WebDriver> wait1;
+
+
     @BeforeClass
     public void initData(){
     System.setProperty("webdriver.chrome.driver",
@@ -58,19 +63,25 @@ public class FormTest
             }
     }
 
+
     @Test
-    public void positiveLoginTest() throws InterruptedException
+    public void sliderTest(){
+
+
+    }
+
+
+    private void loginInit()
     {
+
         wd = new ChromeDriver(chromeOptions);
 
-        Wait<WebDriver> wait1 = new WebDriverWait(wd,5);
-        Wait<WebDriver> wait2 = new FluentWait<>(wd).withTimeout(Duration.ofSeconds(5)).
-                pollingEvery(Duration.ofMillis(500)).ignoring(NoSuchElementException.class);
+        wait1 = new WebDriverWait(wd,5);
+
 
         wd.get("http://andestech.org/learning/rfb18/");
         wait1.until( x -> x.findElement(By.linkText("Login"))).click();
 
-        String loginName = "ppetrov", loginPass = "P@ssw0rd22";
 
 
         wd.findElement(By.name("reset")).click();
@@ -82,6 +93,32 @@ public class FormTest
 
         login.submit();
 
+    }
+
+
+
+    @Test(expectedExceptions = UnhandledAlertException.class, groups = "negative")
+    public void nagativeLoginTest() throws InterruptedException {
+
+        loginName = "ppetrov";
+        loginPass = "P@ssw0rd";
+
+        loginInit();
+
+        wait1.until( x -> x.findElement(By.linkText("Logout"))).click();
+
+    }
+
+
+    @Test(groups = "positive")
+    public void positiveLoginTest() throws InterruptedException
+    {
+
+        loginName = "ppetrov";
+        loginPass = "P@ssw0rd";
+
+        loginInit();
+
        if(isAlertPresent(wd)) {
           Alert alert = wd.switchTo().alert();
           String info = alert.getText();
@@ -90,6 +127,8 @@ public class FormTest
           Assert.fail(info);
 
        }
+
+       // проверка на успешный вход
 
         String headerText = wd.findElement(By.tagName("header")).getText();
         System.out.println(headerText);
