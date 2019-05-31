@@ -59,7 +59,7 @@ public class FormTest
     }
 
 
-    public static boolean isAlertPresent(WebDriver wd){
+    private boolean isAlertPresent(){
 
             WebDriverWait wait = new WebDriverWait(wd, 0);
             try {
@@ -69,9 +69,6 @@ public class FormTest
                 return false;
             }
     }
-
-
-
 
 
     @Test
@@ -95,7 +92,6 @@ public class FormTest
         String w2 = (String) winset2.toArray()[0];
 
         System.out.println("set: " + winset2);
-
 
 
         wd.switchTo().window(w2);
@@ -144,14 +140,10 @@ public class FormTest
     {
 
         wd = new ChromeDriver(chromeOptions);
-
         wait1 = new WebDriverWait(wd,5);
-
 
         wd.get("http://andestech.org/learning/rfb18/");
         wait1.until( x -> x.findElement(By.linkText("Login"))).click();
-
-
 
         wd.findElement(By.name("reset")).click();
 
@@ -170,7 +162,7 @@ public class FormTest
     public void nagativeLoginTest() throws InterruptedException {
 
         loginName = "ppetrov";
-        loginPass = "P@ssw0rd";
+        loginPass = "P@ssw0rd11";
 
         loginInit();
 
@@ -188,7 +180,7 @@ public class FormTest
 
         loginInit();
 
-       if(isAlertPresent(wd)) {
+       if(isAlertPresent()) {
           Alert alert = wd.switchTo().alert();
           String info = alert.getText();
           alert.accept();
