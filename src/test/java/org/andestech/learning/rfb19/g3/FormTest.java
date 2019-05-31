@@ -100,7 +100,6 @@ public class FormTest
 
         wd.switchTo().window(w2);
         wd.navigate().to("http://ya.ru");
-        //wd.switchTo().window(w2);
         Thread.sleep(1000);
         ((JavascriptExecutor)wd).executeScript("window.close()");
 
