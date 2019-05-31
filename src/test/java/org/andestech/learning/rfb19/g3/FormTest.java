@@ -5,6 +5,7 @@ import com.sun.deploy.util.Waiter;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.FluentWait;
@@ -14,8 +15,14 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+
+import org.openqa.selenium.JavascriptExecutor;
+
+
 import java.time.Duration;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import static org.testng.Assert.assertTrue;
@@ -64,10 +71,73 @@ public class FormTest
     }
 
 
+
+
+
     @Test
-    public void sliderTest(){
+    public void windowTest() throws InterruptedException {
+        wd = new ChromeDriver(chromeOptions);
+
+        wait1 = new WebDriverWait(wd, 5);
+
+        wd.get("http://google.com");
+
+        wd.manage().window().setSize(new Dimension(1200,600));
+        String w1 = wd.getWindowHandle();
+        System.out.println("w1: " + w1);
+        Set<String> winset1 = wd.getWindowHandles();
+
+        ((JavascriptExecutor)wd).executeScript("window.open()");
+
+        Set<String> winset2 = wd.getWindowHandles();
+        winset2.removeAll(winset1);
+
+        String w2 = (String) winset2.toArray()[0];
+
+        System.out.println("set: " + winset2);
 
 
+
+        wd.switchTo().window(w2);
+        wd.navigate().to("http://ya.ru");
+        //wd.switchTo().window(w2);
+        Thread.sleep(1000);
+        ((JavascriptExecutor)wd).executeScript("window.close()");
+
+        wd.switchTo().window(w1);
+
+
+        Thread.sleep(2000);
+    }
+
+
+
+    @Test
+    public void sliderTest() throws InterruptedException{
+        wd = new ChromeDriver(chromeOptions);
+
+        wait1 = new WebDriverWait(wd,5);
+
+
+        wd.get("http://andestech.org/learning/rfb18/");
+        wait1.until( x -> x.findElement(By.linkText("Home"))).click();
+
+        WebElement slider = wd.findElement(By.id("price"));
+
+        Actions actions = new Actions(wd);
+
+        actions.moveToElement(slider, 0, 0).click().build().perform();
+
+
+        for(int i=0; i<50; i++)
+        {
+            actions.sendKeys(Keys.RIGHT).build().perform();
+            Thread.sleep(200);
+        }
+
+
+
+         Thread.sleep(2000);
     }
 
 
